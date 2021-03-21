@@ -1,0 +1,70 @@
+<div class="container-fluid pb-4 pt-4 paddding">
+    <div class="container paddding">
+        <div class="row mx-0">
+            <div class="col-md-8 animate-box" data-animate-effect="fadeInLeft">
+                <div>
+                    <div class="fh5co_heading fh5co_heading_border_bottom py-2 mb-4">Add new blog</div>
+                </div>
+                <div>
+                    <form id="blog-submit">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" class="form-control" id="title-input" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Alt Title</label>
+                            <input type="password" class="form-control" id="alt-title-input" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Image path</label>
+                            <input type="password" class="form-control" id="img-path-input" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Content</label>
+                            <textarea name="content-editor"></textarea>
+                        </div>
+                        <div class="alert alert-danger" role="alert" id="error-message">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-3 animate-box" data-animate-effect="fadeInRight">
+                <div>
+                    <div class="fh5co_heading fh5co_heading_border_bottom py-2 mb-4">Something</div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="fh5co_tags_all">
+                    <a href="/" class="fh5co_tagg">
+                        test
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/ckeditor/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('content-editor');
+</script>
+<script>
+    $(document).ready(function () {
+        $('#blog-submit').on('submit', function (e) {
+            e.preventDefault();
+
+            $.post("/api/blog", {
+                title: $('#title-input').val(),
+                alt_title: $('#alt-title-input').val(),
+                content: CKEDITOR.instances['content-editor'].getData(),
+                display_img: $('#alt-title-input').val(),
+            }, function (data) {
+                console.log(data);
+                alert("success");
+            }).fail(function () {
+                alert("error");
+            });
+
+        });
+    });
+</script>

@@ -5,6 +5,7 @@ const jwt_auth = require('./jwt_auth');
 const User = require('../models/user');
 const Blog = require('../models/blog');
 const Tag = require('../models/tag');
+const blog = require('../models/blog');
 
 const api = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false'
 
@@ -80,17 +81,6 @@ Router.get('/login', async (req, res) => {
     }
 });
 
-Router.get('/admin', async (req, res) => {
-    try {
-        const data = {
-            error: ""
-        }
-        res.render('../views/pages/admin/index', data);
-    } catch (err) {
-        console.log(err);
-    }
-});
-
 Router.post('/login', async (req, res) => {
     try {
         let message = "";
@@ -121,6 +111,44 @@ Router.post('/login', async (req, res) => {
         }
 
         res.render('../views/pages/client/login', data);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+
+Router.get('/admin', async (req, res) => {
+    try {
+        const list = await Blog.find();
+        
+        const data = {
+            blogs: list
+        }
+        res.render('../views/pages/admin/index', data);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+Router.get('/admin/blog/create', async (req, res) => {
+    try {
+        const data = {
+            error: ""
+        }
+        res.render('../views/pages/admin/createblog', data);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+Router.get('/admin/blog/edit/:id', async (req, res) => {
+    try {
+        const blog = await Blog.findById(req.params.id);
+        console.log(blog);
+        const data = {
+            error: ""
+        }
+        res.render('../views/pages/admin/index', data);
     } catch (err) {
         console.log(err);
     }

@@ -3,30 +3,36 @@
         <div class="row mx-0">
             <div class="col-md-8 animate-box" data-animate-effect="fadeInLeft">
                 <div>
-                    <div class="fh5co_heading fh5co_heading_border_bottom py-2 mb-4">Add new blog</div>
+                    <div class="fh5co_heading fh5co_heading_border_bottom py-2 mb-4">Blogs</div>
                 </div>
                 <div>
-                    <form id="blog-submit">
-                        <div class="form-group">
-                            <label>Title</label>
-                            <input type="text" class="form-control" id="title-input" value="">
-                        </div>
-                        <div class="form-group">
-                            <label>Alt Title</label>
-                            <input type="password" class="form-control" id="alt-title-input" value="">
-                        </div>
-                        <div class="form-group">
-                            <label>Image path</label>
-                            <input type="password" class="form-control" id="img-path-input" value="">
-                        </div>
-                        <div class="form-group">
-                            <label>Content</label>
-                            <textarea name="content-editor"></textarea>
-                        </div>
-                        <div class="alert alert-danger" role="alert" id="error-message">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
+                    <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">title</th>
+                                <th scope="col">alt title</th>
+                                <th scope="col">img_path</th>
+                                <th scope="col">created_date</th>
+                                <th scope="col">Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% blogs.forEach(item=> { %>
+                                <tr>
+                                    <th scope="row"><%= item.title %></th>
+                                    <td><%= item.alt_title %></td>
+                                    <td><%= item.display_image %></td>
+                                    <td><%= item.created_date.toLocaleDateString() %></td>
+                                    <td>
+                                        <button onclick="location.href='/admin/blog/edit/<%= item._id %>'">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                                <% }); %>
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="col-md-3 animate-box" data-animate-effect="fadeInRight">
@@ -44,10 +50,6 @@
     </div>
 </div>
 
-<script src="/ckeditor/ckeditor.js"></script>
-<script>
-    CKEDITOR.replace('content-editor');
-</script>
 <script>
     $(document).ready(function () {
         $('#blog-submit').on('submit', function (e) {
