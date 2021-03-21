@@ -25,7 +25,7 @@ app.use('/api', api_routes);
 
 app.get('*', (req, res) => res.render('../views/pages/client/notfound'));
 
-mongoose.connect(process.env.MONGO_LOCAL, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
     if (err) console.log("connect fail");
     else console.log("db connected");
 });
