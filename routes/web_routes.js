@@ -24,8 +24,14 @@ Router.get('/', async (req, res) => {
     try {
 
         const data = {
+            headingblog: await Blog.findOne()
+                .sort({ 'created_date': -1 }),
             recentblog: await Blog.find()
-                .sort({ create_date: 1 })
+                .sort({ 'created_date': -1 })
+                .skip(1)
+                .limit(4),
+            more: await Blog.find()
+                .sort({ 'created_date': -1 })
                 .limit(6)
         }
 
@@ -40,7 +46,7 @@ Router.get('/news/:page?', async (req, res) => {
     const page = req.params.page || 1;
     try {
         const list = await Blog.find()
-            .sort({ create_date: 1 })
+            .sort({ 'created_date': -1 })
             .skip(page > 0 ? ((page - 1) * pagesize) : 0)
             .limit(pagesize);
 
@@ -144,7 +150,7 @@ Router.get('/logout', async (req, res) => {
             req.session.token = null;
             return res.redirect('/login');
         }
-        
+
         const data = {
             username: "",
             password: "",
