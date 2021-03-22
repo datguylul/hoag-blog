@@ -15,6 +15,8 @@ Router.use(async (req, res, next) => {
 
     const tag = await Tag.find();
     res.locals.tag = tag;
+
+    res.locals.user = req.session.token;
     next();
 });
 
@@ -57,6 +59,11 @@ Router.get('/blog/:slug', async (req, res) => {
     try {
 
         const blog = await Blog.findOne({ "slug": req.params.slug });
+        const result = await Blog.updateOne({ _id: blog.id }, {
+            $set: {
+                view_count: blog.view_count + 1
+            }
+        });
         const tag = await Tag.find();
 
         const data = {
@@ -82,7 +89,9 @@ Router.get('/tag/:slug', async (req, res) => {
 
 Router.get('/login', async (req, res) => {
     try {
-
+        if (req.session.token) {
+            return res.redirect('/admin');
+        }
         const data = {
             username: "",
             password: "",
@@ -98,8 +107,8 @@ Router.get('/login', async (req, res) => {
 Router.post('/login', async (req, res) => {
     try {
         let message = "";
-        //const url = 'http://localhost:3000/api/user/login/';
-        const url = 'https://hoag-blog.herokuapp.com/api/user/login/';
+        //const url = `${process.env.API_URL}/api/user/login/`;
+        const url = `${process.env.HEROKU_URL}/api/user/login/`;
         await axios({
             method: "post",
             url: url,
@@ -108,15 +117,14 @@ Router.post('/login', async (req, res) => {
                 password: req.body.password
             }
         }).then(resp => {
-            const token = resp.data;
-            // req.session.User = {
-            //     token: token
-            // }
-            res.header('auth-token', token).writeHead(302, { 'Location': '/admin' });
-            return res.end();
+            req.session.token = resp.data;
         }).catch(err => {
             message = err.response.data.message;
         });
+
+        if (req.session.token) {
+            return res.redirect('/admin');
+        }
 
         const data = {
             username: req.body.username,
@@ -130,8 +138,26 @@ Router.post('/login', async (req, res) => {
     }
 });
 
+Router.get('/logout', async (req, res) => {
+    try {
+        if (req.session.token) {
+            req.session.token = null;
+            return res.redirect('/login');
+        }
+        
+        const data = {
+            username: "",
+            password: "",
+            error: ""
+        }
 
-Router.get('/admin', async (req, res) => {
+        res.render('../views/pages/client/login', data);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+Router.get('/admin', jwt_auth, async (req, res) => {
     try {
         const list = await Blog.find();
 
@@ -144,7 +170,44 @@ Router.get('/admin', async (req, res) => {
     }
 });
 
-Router.get('/admin/blog/create', async (req, res) => {
+Router.get('/admin/blog', jwt_auth, async (req, res) => {
+    try {
+        const list = await Blog.find();
+
+        const data = {
+            blogs: list
+        }
+        res.render('../views/pages/admin/bloglist', data);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+Router.get('/admin/headermenu', jwt_auth, async (req, res) => {
+    try {
+        const list = await HeaderMenu.find();
+        const data = {
+            blogs: list
+        }
+        res.render('../views/pages/admin/headermenulist', data);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+Router.get('/admin/tag', jwt_auth, async (req, res) => {
+    try {
+        const list = await Tag.find();
+        const data = {
+            blogs: list
+        }
+        res.render('../views/pages/admin/taglist', data);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+Router.get('/admin/blog/create', jwt_auth, async (req, res) => {
     try {
         const data = {
             error: ""
@@ -155,7 +218,7 @@ Router.get('/admin/blog/create', async (req, res) => {
     }
 });
 
-Router.get('/admin/blog/edit/:id', async (req, res) => {
+Router.get('/admin/blog/edit/:id', jwt_auth, async (req, res) => {
     try {
         const blog = await Blog.findById(req.params.id);
         const data = {

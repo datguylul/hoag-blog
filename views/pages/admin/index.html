@@ -3,72 +3,12 @@
         <div class="row mx-0">
             <div class="col-md-8 animate-box" data-animate-effect="fadeInLeft">
                 <div>
-                    <div class="fh5co_heading fh5co_heading_border_bottom py-2 mb-4">Blogs</div>
+                    <div class="fh5co_heading fh5co_heading_border_bottom py-2 mb-4">Dashboard</div>
                 </div>
-                <div>
-                    <button onclick="location.href='/admin/blog/create'">
-                        Create New
-                    </button>
-                    <hr />
-                    <table class="table">
-                        <thead class="thead-light">
-                            <tr>
-                                <th scope="col">img_path</th>
-                                <th scope="col">title</th>
-                                <th scope="col">alt title</th>
-                                <th scope="col">created_date</th>
-                                <th scope="col">Edit</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% blogs.forEach(item=> { %>
-                                <tr>
-                                    <td>
-                                        <img src="<%= item.display_img %>" style="height: 50px; width: auto;">
-                                    </td>
-                                    <th scope="row">
-                                        <%= item.title %>
-                                    </th>
-                                    <td>
-                                        <%= item.alt_title %>
-                                    </td>
-                                    <td>
-                                        <%= item.created_date.toLocaleDateString() %>
-                                    </td>
-                                    <td>
-                                        <button onclick="location.href='/admin/blog/edit/<%= item._id %>'">
-                                            Edit
-                                        </button>
-                                    </td>
-                                </tr>
-                                <% }); %>
+            </div>
+            
+            <%- include('../../partial/admin/menu.html'); %>
 
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="col-md-3 animate-box" data-animate-effect="fadeInRight">
-                <div>
-                    <div class="fh5co_heading fh5co_heading_border_bottom py-2 mb-4">Menu</div>
-                </div>
-                <div class="clearfix"></div>
-                <div class="fh5co_tags_all">
-                    <div class="btn-group-vertical" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-secondary" onclick="location.href='/admin/headermenu'"
-                            style="cursor: pointer;">
-                            Header Menu
-                        </button>
-                        <button type="button" class="btn btn-secondary" onclick="location.href='/admin/blog'"
-                            style="cursor: pointer;">
-                            Blogs
-                        </button>
-                        <button type="button" class="btn btn-secondary" onclick="location.href='/admin/tag'"
-                            style="cursor: pointer;">
-                            Tags
-                        </button>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>

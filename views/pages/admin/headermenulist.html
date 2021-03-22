@@ -1,0 +1,68 @@
+<div class="container-fluid pb-4 pt-4 paddding">
+    <div class="container paddding">
+        <div class="row mx-0">
+            <div class="col-md-8 animate-box" data-animate-effect="fadeInLeft">
+                <div>
+                    <div class="fh5co_heading fh5co_heading_border_bottom py-2 mb-4">Header Menu</div>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-primary" onclick="location.href='/admin/headermenu/create'">
+                        Create New
+                    </button>
+                    <hr />
+                    <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">id</th>
+                                <th scope="col">name</th>
+                                <th scope="col">link</th>
+                                <th scope="col">active</th>
+                                <th scope="col">created_date</th>
+                                <th scope="col">Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% blogs.forEach(item=> { %>
+                                <tr>
+                                    <th scope="row">
+                                        <%= item.id %>
+                                    </th>
+                                    <td>
+                                        <%= item.name %>
+                                    </td>
+                                    <td>
+                                        <%= item.link %>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input" type="checkbox" <% if (item.active) { %>
+                                        checked
+                                        <% } %>
+                                            >
+                                    </td>
+                                    <td>
+                                        <%= item.created_date.toLocaleDateString() %>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-secondary"
+                                            onclick="location.href='/admin/headermenu/edit/<%= item._id %>'">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                                <% }); %>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <%- include('../../partial/admin/menu.html'); %>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+    });
+</script>

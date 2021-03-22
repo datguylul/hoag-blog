@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
+const session = require('express-session');
 const body_parser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -12,9 +13,11 @@ const web_routes = require('./routes/web_routes');
 const api_routes = require('./routes/api_routes');
 const port = process.env.PORT || 3000;
 
-const HeaderMenu = require('./models/header_menu');
-const { nextTick } = require('process');
-
+app.use(session({
+    resave: true, 
+    saveUninitialized: true, 
+    secret: 'hoag', 
+    cookie: { maxAge: 60000 }}));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.use(express.static(__dirname + '/public'));

@@ -63,13 +63,26 @@
 
                     <% locals.headermenu.forEach(item=> { %>
                         <li class="nav-item">
-                            <a class="nav-link" href="<%= item.link %> ">
+                            <a class="nav-link" href="<%= item.link %>">
                                 <%= item.name %> <span class="sr-only">(current)</span>
                             </a>
                         </li>
                         <% }); %>
 
-                            <!-- Child menu
+                            <% if (locals.user) { %>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/admin">
+                                        Admin<span class="sr-only">(current)</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/logout">
+                                        Logout<span class="sr-only">(current)</span>
+                                    </a>
+                                </li>
+                                <% } %>
+
+                                    <!-- Child menu
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuButton3" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">Community<span
