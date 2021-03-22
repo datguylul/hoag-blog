@@ -17,7 +17,8 @@ app.use(session({
     resave: true, 
     saveUninitialized: true, 
     secret: 'hoag', 
-    cookie: { maxAge: 60000 }}));
+    cookie: { maxAge: 365 * 24 * 60 * 60 * 1000 }}));
+
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.use(express.static(__dirname + '/public'));
