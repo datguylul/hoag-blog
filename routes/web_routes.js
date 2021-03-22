@@ -120,7 +120,7 @@ Router.post('/login', async (req, res) => {
 Router.get('/admin', async (req, res) => {
     try {
         const list = await Blog.find();
-        
+
         const data = {
             blogs: list
         }
@@ -144,11 +144,10 @@ Router.get('/admin/blog/create', async (req, res) => {
 Router.get('/admin/blog/edit/:id', async (req, res) => {
     try {
         const blog = await Blog.findById(req.params.id);
-        console.log(blog);
         const data = {
             error: ""
         }
-        res.render('../views/pages/admin/index', data);
+        res.render('../views/pages/admin/editblog', { blog: blog });
     } catch (err) {
         console.log(err);
     }

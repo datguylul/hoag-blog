@@ -56,6 +56,25 @@ Router.post('/blog', async (req, res) => {
     }
 });
 
+Router.put('/blog/:id', async (req, res) => {
+    try {
+        const slug = slugify(req.body.title, { lower: true, strict: true });
+        const result = await Blog.updateOne({ _id: req.params.id }, {
+            $set: {
+                title: req.body.title,
+                alt_title: req.body.alt_title,
+                content: req.body.content,
+                display_img: req.body.display_img,
+                slug: slug,
+                modify_date: Date.now()
+            }
+        });
+        res.send(result);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
 Router.get('/headermenu', async (req, res) => {
     try {
         const list = await HeaderMenu.find();
