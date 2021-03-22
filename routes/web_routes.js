@@ -150,7 +150,6 @@ Router.get('/admin/blog/create', async (req, res) => {
 Router.get('/admin/blog/edit/:id', async (req, res) => {
     try {
         const blog = await Blog.findById(req.params.id);
-        console.log(blog);
         const data = {
             error: ""
         }
