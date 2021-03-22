@@ -90,7 +90,8 @@ Router.post('/headermenu', async (req, res) => {
         const headermenu = new HeaderMenu({
             id: req.body.id,
             name: req.body.name,
-            link: req.body.link
+            link: req.body.link,
+            active: true
         });
 
         const result = await headermenu.save();

@@ -12,18 +12,21 @@ const web_routes = require('./routes/web_routes');
 const api_routes = require('./routes/api_routes');
 const port = process.env.PORT || 3000;
 
+const HeaderMenu = require('./models/header_menu');
+const { nextTick } = require('process');
+
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.use(express.static(__dirname + '/public'));
 app.use(layout);
 app.use(cors());
 app.use(body_parser.json());
-app.use(body_parser.urlencoded({ extended: true })); 
+app.use(body_parser.urlencoded({ extended: true }));
 
 app.use(web_routes);
 app.use('/api', api_routes);
 
-app.get('*', (req, res) => res.render('../views/pages/client/notfound'));
+app.get('*', async (req, res) => res.render('../views/pages/client/notfound'));
 
 mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
     if (err) console.log("connect fail");
