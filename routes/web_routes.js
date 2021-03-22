@@ -12,12 +12,22 @@ const api = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&orde
 Router.use(async (req, res, next) => {
     const data = await HeaderMenu.find();
     res.locals.headermenu = data;
+
+    const tag = await Tag.find();
+    res.locals.tag = tag;
     next();
 });
 
 Router.get('/', async (req, res) => {
     try {
-        res.render('../views/pages/client/index');
+
+        const data = {
+            recentblog: await Blog.find()
+                .sort({ create_date: 1 })
+                .limit(6)
+        }
+
+        res.render('../views/pages/client/index', data);
     } catch (err) {
         console.log(err);
     }
@@ -31,12 +41,10 @@ Router.get('/news/:page?', async (req, res) => {
             .sort({ create_date: 1 })
             .skip(page > 0 ? ((page - 1) * pagesize) : 0)
             .limit(pagesize);
-        const tag = await Tag.find();
 
         const data = {
             page: page,
-            blogs: list,
-            tag: tag
+            blogs: list
         }
 
         res.render('../views/pages/client/news', data);
