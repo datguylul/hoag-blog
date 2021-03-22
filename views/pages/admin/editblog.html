@@ -16,7 +16,7 @@
                             <input type="text" class="form-control" id="alt-title-input" value="<%= blog.alt_title%>">
                         </div>
                         <div class="form-group">
-                            <label>Image path</label>
+                            <label>Display Image</label>
                             <input type="text" class="form-control" id="img-path-input" value="<%= blog.display_img %>">
                         </div>
                         <div class="form-group">
@@ -62,7 +62,7 @@
                 title: $('#title-input').val(),
                 alt_title: $('#alt-title-input').val(),
                 content: CKEDITOR.instances['content-editor'].getData(),
-                display_img: $('#alt-title-input').val(),
+                display_img: $('#img-path-input').val(),
             };
             $.ajax({
                 url: '/api/blog/<%= blog._id %>',

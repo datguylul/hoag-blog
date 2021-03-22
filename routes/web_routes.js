@@ -11,7 +11,6 @@ const api = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&orde
 
 Router.use(async (req, res, next) => {
     const data = await HeaderMenu.find();
-    console.log(data);
     res.locals.headermenu = data;
     next();
 });
@@ -151,6 +150,7 @@ Router.get('/admin/blog/create', async (req, res) => {
 Router.get('/admin/blog/edit/:id', async (req, res) => {
     try {
         const blog = await Blog.findById(req.params.id);
+        console.log(blog);
         const data = {
             error: ""
         }
