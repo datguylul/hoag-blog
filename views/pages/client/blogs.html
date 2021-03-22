@@ -1,3 +1,11 @@
+<div class="container-fluid contact_us_bg_img">
+    <div class="container">
+        <div class="row">
+            <a href="/" class="fh5co_con_123"><i class="fa fa-home"></i></a>
+            <a href="#" class="fh5co_con pt-2"> BLOGS </a>
+        </div>
+    </div>
+</div>
 <div class="container-fluid pb-4 pt-4 paddding">
     <div class="container paddding">
         <div class="row mx-0">
@@ -28,10 +36,23 @@
                         </div>
                     </div>
                     <% }); %>
+                        <div class="row mx-0">
+                            <div class="col-12 text-center pb-4 pt-4">
+                                <%if (page> 1 ) { %>
+                                    <a href="/blogs/<%= page-1 %>" class="btn_mange_pagging">
+                                        <i class="fa fa-long-arrow-left"></i>&nbsp;&nbsp; Previous
+                                    </a>
+
+                                    <% } %>
+                                        <a href="/blogs/<%= page+1 %>" class="btn_mange_pagging">Next
+                                            <i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;
+                                        </a>
+                            </div>
+                        </div>
 
             </div>
             <div class="col-md-3 animate-box" data-animate-effect="fadeInRight">
-                
+
                 <%- include('../../partial/client/tags.html'); %>
 
                     <div>
@@ -76,19 +97,6 @@
                             <div class="most_fh5co_treding_font_123"> April 18, 2016</div>
                         </div>
                     </div>
-            </div>
-        </div>
-        <div class="row mx-0">
-            <div class="col-12 text-center pb-4 pt-4">
-                <%if (page> 1 ) { %>
-                    <a href="/news/<%= page-1 %>" class="btn_mange_pagging">
-                        <i class="fa fa-long-arrow-left"></i>&nbsp;&nbsp; Previous
-                    </a>
-
-                    <% } %>
-                        <a href="/news/<%= page+1 %>" class="btn_mange_pagging">Next
-                            <i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;
-                        </a>
             </div>
         </div>
     </div>

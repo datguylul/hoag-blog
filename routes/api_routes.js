@@ -102,6 +102,21 @@ Router.post('/headermenu', async (req, res) => {
     }
 });
 
+Router.put('/headermenu/:id', async (req, res) => {
+    try {
+        const result = await HeaderMenu.updateOne({ _id: req.params.id }, {
+            $set: {
+                name: req.body.name,
+                link: req.body.link,
+                modify_date: Date.now()
+            }
+        });
+        res.send(result);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
 Router.get('/tag', async (req, res) => {
     try {
         const list = await Tag.find();

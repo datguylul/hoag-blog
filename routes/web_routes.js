@@ -41,7 +41,17 @@ Router.get('/', async (req, res) => {
     }
 });
 
-Router.get('/news/:page?', async (req, res) => {
+Router.get('/contact', async (req, res) => {
+    try {
+
+        res.render('../views/pages/client/contact');
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+
+Router.get('/blogs/:page?', async (req, res) => {
     const pagesize = 10;
     const page = req.params.page || 1;
     try {
@@ -55,7 +65,7 @@ Router.get('/news/:page?', async (req, res) => {
             blogs: list
         }
 
-        res.render('../views/pages/client/news', data);
+        res.render('../views/pages/client/blogs', data);
     } catch (err) {
         console.log(err);
     }
