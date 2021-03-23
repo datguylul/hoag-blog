@@ -24,6 +24,16 @@
                             <input type="text" class="form-control" id="img-path-input" value="<%= blog.display_img %>">
                         </div>
                         <div class="form-group">
+                            <label>Tags</label>
+                            <select id="multi-select" placeholder="Select tags" multiple>
+                                <% tags.map((item)=> { %>
+                                    <option value="<%= item.id %>">
+                                        <%= item.name %>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label>Content</label>
                             <textarea name="content-editor"></textarea>
                         </div>
@@ -33,26 +43,31 @@
                     </form>
                 </div>
             </div>
-            
+
             <%- include('../../partial/admin/menu.html'); %>
         </div>
     </div>
 </div>
 
 <script src="/ckeditor/ckeditor.js"></script>
+<script
+    src="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1569006273/BBBootstrap/choices.min.js?version=7.0.0"></script>
 <script>
     CKEDITOR.replace('content-editor');
     //console.log(data);
 </script>
 <script>
     $(document).ready(function () {
+        var multipleCancelButton = new Choices('#multi-select', {
+            removeItemButton: true
+        });
 
         const data = `<%- blog.content %>`;
+
         CKEDITOR.instances['content-editor'].setData(data);
 
         $('#edit-blog-submit').on('submit', function (e) {
             e.preventDefault();
-
             let btn = $(':input[type="submit"]');
             btn.prop('disabled', true);
 
@@ -61,6 +76,7 @@
                 alt_title: $('#alt-title-input').val(),
                 content: CKEDITOR.instances['content-editor'].getData(),
                 display_img: $('#img-path-input').val(),
+                tags: $('#multi-select').val()
             };
             $.ajax({
                 url: '/api/blog/<%= blog._id %>',
@@ -70,7 +86,7 @@
                     location.reload();
                 }
             });
-            
+
             btn.prop('disabled', false);
         });
     });

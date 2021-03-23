@@ -50,7 +50,6 @@ Router.get('/contact', async (req, res) => {
     }
 });
 
-
 Router.get('/blogs/:page?', async (req, res) => {
     const pagesize = 10;
     const page = req.params.page || 1;
@@ -80,11 +79,10 @@ Router.get('/blog/:slug', async (req, res) => {
                 view_count: blog.view_count + 1
             }
         });
-        const tag = await Tag.find();
 
         const data = {
             blog: blog,
-            tag: tag
+            tags: await Tag.find({ id: blog.tags_id })
         }
 
         res.render('../views/pages/client/detail', data);
@@ -95,9 +93,18 @@ Router.get('/blog/:slug', async (req, res) => {
 
 Router.get('/tag/:slug', async (req, res) => {
     try {
-        const list = await Blog.find({ slug: req.params.slug });
+        const tag = await Tag.findOne({ slug: req.params.slug });
+        const list = await Blog.find({
+            tags_id:
+                { $in: tag.id }
 
-        res.send(list);
+        });
+
+        const data = {
+            page: 0,
+            blogs: list
+        }
+        res.render('../views/pages/client/blogs', data);
     } catch (err) {
         console.log(err);
     }
@@ -173,7 +180,7 @@ Router.get('/logout', async (req, res) => {
     }
 });
 
-Router.get('/admin', jwt_auth, async (req, res) => {
+Router.get('/admin', async (req, res) => {
     try {
         const list = await Blog.find();
 
@@ -186,7 +193,7 @@ Router.get('/admin', jwt_auth, async (req, res) => {
     }
 });
 
-Router.get('/admin/blog', jwt_auth, async (req, res) => {
+Router.get('/admin/blog', async (req, res) => {
     try {
         const list = await Blog.find();
 
@@ -199,7 +206,7 @@ Router.get('/admin/blog', jwt_auth, async (req, res) => {
     }
 });
 
-Router.get('/admin/headermenu', jwt_auth, async (req, res) => {
+Router.get('/admin/headermenu', async (req, res) => {
     try {
         const list = await HeaderMenu.find();
         const data = {
@@ -211,7 +218,7 @@ Router.get('/admin/headermenu', jwt_auth, async (req, res) => {
     }
 });
 
-Router.get('/admin/tag', jwt_auth, async (req, res) => {
+Router.get('/admin/tag', async (req, res) => {
     try {
         const list = await Tag.find();
         const data = {
@@ -223,10 +230,10 @@ Router.get('/admin/tag', jwt_auth, async (req, res) => {
     }
 });
 
-Router.get('/admin/blog/create', jwt_auth, async (req, res) => {
+Router.get('/admin/blog/create', async (req, res) => {
     try {
         const data = {
-            error: ""
+            tags: await Tag.find()
         }
         res.render('../views/pages/admin/createblog', data);
     } catch (err) {
@@ -234,13 +241,13 @@ Router.get('/admin/blog/create', jwt_auth, async (req, res) => {
     }
 });
 
-Router.get('/admin/blog/edit/:id', jwt_auth, async (req, res) => {
+Router.get('/admin/blog/edit/:id', async (req, res) => {
     try {
-        const blog = await Blog.findById(req.params.id);
         const data = {
-            error: ""
+            tags: await Tag.find(),
+            blog: await Blog.findById(req.params.id)
         }
-        res.render('../views/pages/admin/editblog', { blog: blog });
+        res.render('../views/pages/admin/editblog', data);
     } catch (err) {
         console.log(err);
     }

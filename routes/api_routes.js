@@ -43,6 +43,7 @@ Router.post('/blog', async (req, res) => {
             alt_title: req.body.alt_title,
             content: req.body.content,
             display_img: req.body.display_img,
+            tags_id: req.body.tags,
             slug: slug
         });
 
@@ -58,6 +59,7 @@ Router.post('/blog', async (req, res) => {
 
 Router.put('/blog/:id', async (req, res) => {
     try {
+
         const slug = slugify(req.body.title, { lower: true, strict: true });
         const result = await Blog.updateOne({ _id: req.params.id }, {
             $set: {
@@ -66,6 +68,7 @@ Router.put('/blog/:id', async (req, res) => {
                 content: req.body.content,
                 display_img: req.body.display_img,
                 slug: slug,
+                tags_id: req.body.tags,
                 modify_date: Date.now()
             }
         });

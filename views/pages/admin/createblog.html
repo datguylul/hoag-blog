@@ -24,6 +24,16 @@
                             <input type="text" class="form-control" id="img-path-input" value="">
                         </div>
                         <div class="form-group">
+                            <label>Tags</label>
+                            <select id="multi-select" placeholder="Select tags" multiple>
+                                <% tags.map((item)=> { %>
+                                    <option value="<%= item.id %>">
+                                        <%= item.name %>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label>Content</label>
                             <textarea name="content-editor"></textarea>
                         </div>
@@ -40,19 +50,30 @@
 </div>
 
 <script src="/ckeditor/ckeditor.js"></script>
+<script
+    src="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1569006273/BBBootstrap/choices.min.js?version=7.0.0"></script>
 <script>
     CKEDITOR.replace('content-editor');
 </script>
 <script>
     $(document).ready(function () {
+
+        var multipleCancelButton = new Choices('#multi-select', {
+            removeItemButton: true
+        });
+        
         $('#blog-submit').on('submit', function (e) {
             e.preventDefault();
+
+            let btn = $(':input[type="submit"]');
+            btn.prop('disabled', true);
 
             $.post("/api/blog", {
                 title: $('#title-input').val(),
                 alt_title: $('#alt-title-input').val(),
                 content: CKEDITOR.instances['content-editor'].getData(),
                 display_img: $('#img-path-input').val(),
+                tags: $('#multi-select').val()
             }, function (data) {
                 console.log(data);
                 alert("success");
@@ -60,6 +81,7 @@
                 alert("error");
             });
 
+            btn.prop('disabled', false);
         });
     });
 </script>
