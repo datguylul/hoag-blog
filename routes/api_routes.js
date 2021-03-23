@@ -46,9 +46,7 @@ Router.post('/blog', async (req, res) => {
             tags_id: req.body.tags,
             slug: slug
         });
-
-        console.log(blog);
-
+        
         const result = await blog.save();
 
         res.send("result");
