@@ -10,8 +10,11 @@ const HeaderMenu = require('../models/header_menu');
 const api = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false'
 
 Router.use(async (req, res, next) => {
-    const data = await HeaderMenu.find();
-    res.locals.headermenu = data;
+    const menu = await HeaderMenu.find();
+    res.locals.headermenu = menu;
+
+    const popular = await Blog.find().sort({ view_count: 'desc' }).limit(6);
+    res.locals.popular = popular;
 
     const tag = await Tag.find();
     res.locals.tag = tag;
@@ -98,7 +101,7 @@ Router.get('/tag/:slug', async (req, res) => {
             tags_id:
                 { $in: tag.id }
 
-        });
+        }).sort({ 'created_date': -1 });
 
         const data = {
             page: 0,
@@ -180,7 +183,7 @@ Router.get('/logout', async (req, res) => {
     }
 });
 
-Router.get('/admin', async (req, res) => {
+Router.get('/admin', jwt_auth, async (req, res) => {
     try {
         const list = await Blog.find();
 
@@ -193,7 +196,7 @@ Router.get('/admin', async (req, res) => {
     }
 });
 
-Router.get('/admin/blog', async (req, res) => {
+Router.get('/admin/blog', jwt_auth, async (req, res) => {
     try {
         const list = await Blog.find();
 
@@ -206,7 +209,7 @@ Router.get('/admin/blog', async (req, res) => {
     }
 });
 
-Router.get('/admin/headermenu', async (req, res) => {
+Router.get('/admin/headermenu', jwt_auth, async (req, res) => {
     try {
         const list = await HeaderMenu.find();
         const data = {
@@ -218,7 +221,7 @@ Router.get('/admin/headermenu', async (req, res) => {
     }
 });
 
-Router.get('/admin/tag', async (req, res) => {
+Router.get('/admin/tag', jwt_auth, async (req, res) => {
     try {
         const list = await Tag.find();
         const data = {
@@ -230,7 +233,7 @@ Router.get('/admin/tag', async (req, res) => {
     }
 });
 
-Router.get('/admin/blog/create', async (req, res) => {
+Router.get('/admin/blog/create', jwt_auth, async (req, res) => {
     try {
         const data = {
             tags: await Tag.find()
@@ -241,7 +244,7 @@ Router.get('/admin/blog/create', async (req, res) => {
     }
 });
 
-Router.get('/admin/blog/edit/:id', async (req, res) => {
+Router.get('/admin/blog/edit/:id', jwt_auth, async (req, res) => {
     try {
         const data = {
             tags: await Tag.find(),
