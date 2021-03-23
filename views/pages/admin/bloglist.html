@@ -10,7 +10,7 @@
                         Create New
                     </button>
                     <hr />
-                    <table class="table">
+                    <table class="table" id="blog-table">
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col">img_path</th>
@@ -27,7 +27,9 @@
                                         <img src="<%= item.display_img %>" style="height: 50px; width: auto;">
                                     </td>
                                     <th scope="row">
-                                        <%= item.title %>
+                                        <a href="/admin/blog/edit/<%= item._id %>" style="text-decoration: none; color: inherit;">
+                                            <%= item.title %>
+                                        </a>
                                     </th>
                                     <td>
                                         <%= item.alt_title %>
@@ -37,7 +39,7 @@
                                     </td>
                                     <td>
                                         <button type="button" class="btn btn-secondary"
-                                        onclick="location.href='/admin/blog/edit/<%= item._id %>'">
+                                            onclick="location.href='/admin/blog/edit/<%= item._id %>'">
                                             Edit
                                         </button>
                                     </td>
@@ -48,7 +50,7 @@
                     </table>
                 </div>
             </div>
-            
+
             <%- include('../../partial/admin/menu.html'); %>
         </div>
     </div>
@@ -56,5 +58,6 @@
 
 <script>
     $(document).ready(function () {
+        $('#blog-table').DataTable();
     });
 </script>

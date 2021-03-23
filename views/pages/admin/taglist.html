@@ -11,7 +11,7 @@
                         Create New
                     </button>
                     <hr />
-                    <table class="table">
+                    <table class="table" id="tag-table">
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col">id</th>
@@ -56,5 +56,6 @@
 
 <script>
     $(document).ready(function () {
+        $('#tag-table').DataTable();
     });
 </script>
