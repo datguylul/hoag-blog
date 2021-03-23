@@ -117,9 +117,15 @@
                                         Logout<span class="sr-only">(current)</span>
                                     </a>
                                 </li>
-                                <% } %>
+                                <% } else {%>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/login">
+                                            Login<span class="sr-only">(current)</span>
+                                        </a>
+                                    </li>
+                                    <% } %>
 
-                                    <!-- Child menu
+                                        <!-- Child menu
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuButton3" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">Community<span
