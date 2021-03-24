@@ -184,99 +184,99 @@ Router.get('/logout', async (req, res) => {
     }
 });
 
-Router.get('/admin', jwt_auth, async (req, res) => {
-    try {
-        const list = await Blog.find();
+// Router.get('/admin', jwt_auth, async (req, res) => {
+//     try {
+//         const list = await Blog.find();
 
-        const data = {
-            blogs: list
-        }
-        res.render('../views/pages/admin/index', data);
-    } catch (err) {
-        console.log(err);
-    }
-});
+//         const data = {
+//             blogs: list
+//         }
+//         res.render('../views/pages/admin/index', data);
+//     } catch (err) {
+//         console.log(err);
+//     }
+// });
 
-Router.get('/admin/blog', jwt_auth, async (req, res) => {
-    try {
-        const list = await Blog.find();
+// Router.get('/admin/blog', jwt_auth, async (req, res) => {
+//     try {
+//         const list = await Blog.find();
 
-        const data = {
-            blogs: list
-        }
-        res.render('../views/pages/admin/bloglist', data);
-    } catch (err) {
-        console.log(err);
-    }
-});
+//         const data = {
+//             blogs: list
+//         }
+//         res.render('../views/pages/admin/bloglist', data);
+//     } catch (err) {
+//         console.log(err);
+//     }
+// });
 
-Router.get('/admin/headermenu', jwt_auth, async (req, res) => {
-    try {
-        const list = await HeaderMenu.find();
-        const data = {
-            blogs: list
-        }
-        res.render('../views/pages/admin/headermenulist', data);
-    } catch (err) {
-        console.log(err);
-    }
-});
+// Router.get('/admin/headermenu', jwt_auth, async (req, res) => {
+//     try {
+//         const list = await HeaderMenu.find();
+//         const data = {
+//             blogs: list
+//         }
+//         res.render('../views/pages/admin/headermenulist', data);
+//     } catch (err) {
+//         console.log(err);
+//     }
+// });
 
-Router.get('/admin/tag', jwt_auth, async (req, res) => {
-    try {
-        const list = await Tag.find();
-        const data = {
-            blogs: list
-        }
-        res.render('../views/pages/admin/taglist', data);
-    } catch (err) {
-        console.log(err);
-    }
-});
+// Router.get('/admin/tag', jwt_auth, async (req, res) => {
+//     try {
+//         const list = await Tag.find();
+//         const data = {
+//             blogs: list
+//         }
+//         res.render('../views/pages/admin/taglist', data);
+//     } catch (err) {
+//         console.log(err);
+//     }
+// });
 
-Router.get('/admin/blog/create', jwt_auth, async (req, res) => {
-    try {
-        const data = {
-            tags: await Tag.find()
-        }
-        res.render('../views/pages/admin/createblog', data);
-    } catch (err) {
-        console.log(err);
-    }
-});
+// Router.get('/admin/blog/create', jwt_auth, async (req, res) => {
+//     try {
+//         const data = {
+//             tags: await Tag.find()
+//         }
+//         res.render('../views/pages/admin/createblog', data);
+//     } catch (err) {
+//         console.log(err);
+//     }
+// });
 
-Router.get('/admin/blog/edit/:id', jwt_auth, async (req, res) => {
-    try {
-        const data = {
-            tags: await Tag.find(),
-            blog: await Blog.findById(req.params.id)
-        }
-        res.render('../views/pages/admin/editblog', data);
-    } catch (err) {
-        console.log(err);
-    }
-});
+// Router.get('/admin/blog/edit/:id', jwt_auth, async (req, res) => {
+//     try {
+//         const data = {
+//             tags: await Tag.find(),
+//             blog: await Blog.findById(req.params.id)
+//         }
+//         res.render('../views/pages/admin/editblog', data);
+//     } catch (err) {
+//         console.log(err);
+//     }
+// });
 
-Router.get('/admin/headermenu/edit/:id', jwt_auth, async (req, res) => {
-    try {
-        const data = {
-            header: await HeaderMenu.findById(req.params.id)
-        }
-        res.render('../views/pages/admin/editheadermenu', data);
-    } catch (err) {
-        console.log(err);
-    }
-});
+// Router.get('/admin/headermenu/edit/:id', jwt_auth, async (req, res) => {
+//     try {
+//         const data = {
+//             header: await HeaderMenu.findById(req.params.id)
+//         }
+//         res.render('../views/pages/admin/editheadermenu', data);
+//     } catch (err) {
+//         console.log(err);
+//     }
+// });
 
-Router.get('/admin/tag/edit/:id', jwt_auth, async (req, res) => {
-    try {
-        const data = {
-            tag: await Tag.findById(req.params.id)
-        }
-        res.render('../views/pages/admin/edittag', data);
-    } catch (err) {
-        console.log(err);
-    }
-});
+// Router.get('/admin/tag/edit/:id', jwt_auth, async (req, res) => {
+//     try {
+//         const data = {
+//             tag: await Tag.findById(req.params.id)
+//         }
+//         res.render('../views/pages/admin/edittag', data);
+//     } catch (err) {
+//         console.log(err);
+//     }
+// });
 
 module.exports = Router;

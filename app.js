@@ -11,6 +11,7 @@ const path = require('path');
 
 const web_routes = require('./routes/web_routes');
 const api_routes = require('./routes/api_routes');
+const admin_routes = require('./routes/admin_routes');
 const port = process.env.PORT || 3000;
 
 app.use(session({
@@ -28,6 +29,7 @@ app.use(body_parser.json());
 app.use(body_parser.urlencoded({ extended: true }));
 
 app.use(web_routes);
+app.use('/admin', admin_routes);
 app.use('/api', api_routes);
 
 app.get('*', async (req, res) => res.render('../views/pages/client/notfound'));
