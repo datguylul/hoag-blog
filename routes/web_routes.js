@@ -6,6 +6,7 @@ const User = require('../models/user');
 const Blog = require('../models/blog');
 const Tag = require('../models/tag');
 const HeaderMenu = require('../models/header_menu');
+const header_menu = require('../models/header_menu');
 
 const api = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false'
 
@@ -251,6 +252,28 @@ Router.get('/admin/blog/edit/:id', jwt_auth, async (req, res) => {
             blog: await Blog.findById(req.params.id)
         }
         res.render('../views/pages/admin/editblog', data);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+Router.get('/admin/headermenu/edit/:id', jwt_auth, async (req, res) => {
+    try {
+        const data = {
+            header: await HeaderMenu.findById(req.params.id)
+        }
+        res.render('../views/pages/admin/editheadermenu', data);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+Router.get('/admin/tag/edit/:id', jwt_auth, async (req, res) => {
+    try {
+        const data = {
+            tag: await Tag.findById(req.params.id)
+        }
+        res.render('../views/pages/admin/edittag', data);
     } catch (err) {
         console.log(err);
     }

@@ -1,0 +1,52 @@
+<div class="container-fluid pb-4 pt-4 paddding">
+    <div class="container paddding">
+        <div class="row mx-0">
+            <div class="col-md-10 animate-box" data-animate-effect="fadeInLeft">
+                <div>
+                    <div class="fh5co_heading fh5co_heading_border_bottom py-2 mb-4">Edit '<%= tag.name %>' </div>
+                </div>
+                <div>
+                    <form id="form-edit-tag">
+                        <div class="form-group">
+                            <label>Tag ID</label>
+                            <input type="text" class="form-control" value="<%= tag.id %>" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Tag Name</label>
+                            <input type="text" class="form-control" id="tag-name" placeholder="Tag name"
+                                value="<%= tag.name %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Tag Slug</label>
+                            <input type="text" class="form-control" value="<%= tag.slug %>" readonly>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+
+            <%- include('../../partial/admin/menu.html'); %>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $('#form-edit-tag').on('submit', (e) => {
+            e.preventDefault();
+            const data = {
+                name: $('#tag-name').val(),
+            }
+
+            $.ajax({
+                url: '/api/tag/<%= tag._id %>',
+                type: 'PUT',
+                data: data,
+                success: function (data) {
+                    location.href = "/admin/tag";
+                }
+            });
+        });
+    });
+</script>

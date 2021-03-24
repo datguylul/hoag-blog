@@ -46,7 +46,7 @@ Router.post('/blog', async (req, res) => {
             tags_id: req.body.tags,
             slug: slug
         });
-        
+
         const result = await blog.save();
 
         res.send("result");
@@ -76,6 +76,15 @@ Router.put('/blog/:id', async (req, res) => {
     }
 });
 
+Router.delete('/blog/:id', async (req, res) => {
+    try {
+        const result = await Blog.deleteOne({ _id: req.params.id });
+        res.send(result);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
 Router.get('/headermenu', async (req, res) => {
     try {
         const list = await HeaderMenu.find();
@@ -96,7 +105,6 @@ Router.post('/headermenu', async (req, res) => {
         });
 
         const result = await headermenu.save();
-
         res.send(result);
     } catch (err) {
         console.log(err);
@@ -109,9 +117,19 @@ Router.put('/headermenu/:id', async (req, res) => {
             $set: {
                 name: req.body.name,
                 link: req.body.link,
+                active: req.body.active,
                 modify_date: Date.now()
             }
         });
+        res.send(result);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+Router.delete('/headermenu/:id', async (req, res) => {
+    try {
+        const result = await HeaderMenu.deleteOne({ _id: req.params.id });
         res.send(result);
     } catch (err) {
         console.log(err);
@@ -139,6 +157,31 @@ Router.post('/tag', async (req, res) => {
 
         const result = await tag.save();
 
+        res.send(result);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+Router.put('/tag/:id', async (req, res) => {
+    try {
+
+        const slug = slugify(req.body.name, { lower: true, strict: true });
+        const result = await Tag.updateOne({ _id: req.params.id }, {
+            $set: {
+                name: req.body.name,
+                slug: slug
+            }
+        });
+        res.send(result);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+Router.delete('/tag/:id', async (req, res) => {
+    try {
+        const result = await Tag.deleteOne({ _id: req.params.id });
         res.send(result);
     } catch (err) {
         console.log(err);

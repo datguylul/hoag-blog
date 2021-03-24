@@ -6,7 +6,7 @@ module.exports = function (req, res, next) {
     if (!token) return res.status(401).render('../views/pages/client/login', {
         username: "",
         password: "",
-        error: "Access Denied"
+        error: "Access Denied. Please Login"
     });
 
     try {
@@ -17,7 +17,7 @@ module.exports = function (req, res, next) {
         res.status(401).render('../views/pages/client/login', {
             username: "",
             password: "",
-            error: "Invalid Token"
+            error: "Invalid Token. Try Login Again"
         });
     }
 }

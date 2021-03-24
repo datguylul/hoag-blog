@@ -1,12 +1,47 @@
+<div id="create-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Create New</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-create-headermenu">
+                    <div class="form-group">
+                        <label>Menu ID</label>
+                        <input type="text" class="form-control" id="menu-id" placeholder="Menu ID">
+                    </div>
+                    <div class="form-group">
+                        <label>Menu Name</label>
+                        <input type="text" class="form-control" id="menu-name" placeholder="Menu name">
+                    </div>
+                    <div class="form-group">
+                        <label>Menu Link</label>
+                        <input type="text" class="form-control" id="menu-link" placeholder="Link">
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" class="form-check-input" id="active-cbox">
+                        <label class="form-check-label">Active</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container-fluid pb-4 pt-4 paddding">
     <div class="container paddding">
         <div class="row mx-0">
-            <div class="col-md-8 animate-box" data-animate-effect="fadeInLeft">
+            <div class="col-md-10 animate-box" data-animate-effect="fadeInLeft">
                 <div>
                     <div class="fh5co_heading fh5co_heading_border_bottom py-2 mb-4">Header Menu</div>
                 </div>
                 <div>
-                    <button type="button" class="btn btn-primary" onclick="location.href='/admin/headermenu/create'">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#create-modal">
                         Create New
                     </button>
                     <hr />
@@ -47,6 +82,10 @@
                                             onclick="location.href='/admin/headermenu/edit/<%= item._id %>'">
                                             Edit
                                         </button>
+                                        <button type="button" class="btn btn-danger"
+                                            onclick="btnDelete(`<%= item._id %>`)">
+                                            Delete
+                                        </button>
                                     </td>
                                 </tr>
                                 <% }); %>
@@ -62,7 +101,31 @@
 </div>
 
 <script>
+    function btnDelete(id) {
+        $.ajax({
+            url: `/api/headermenu/${id}`,
+            type: 'Delete',
+            success: function (response) {
+                location.reload();
+            }
+        });
+    }
+
     $(document).ready(function () {
         $('#headermenu-table').DataTable();
+
+        $('#form-create-headermenu').on('submit', (e) => {
+            e.preventDefault();
+            const data = {
+                id: $('#menu-id').val(),
+                name: $('#menu-name').val(),
+                link: $('#menu-link').val(),
+                active: $('#active-cbox').is(":checked")
+            }
+
+            $.post('/api/headermenu', data, (data) => {
+                location.reload();
+            });
+        });
     });
 </script>
