@@ -3,6 +3,7 @@ const joi = require('@hapi/joi');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const slugify = require('slugify');
+const url = require('url');
 
 const Blog = require('../models/blog');
 const HeaderMenu = require('../models/header_menu');
@@ -11,7 +12,14 @@ const User = require('../models/user');
 
 Router.get('/blog', async (req, res) => {
     try {
-        const list = await Blog.find();
+        const page = req.query.page || 1;
+        const pagesize = parseInt(req.query.page_size) || 10;
+        const date_sort = req.query.date_sort || -1;
+
+        const list = await Blog.find()
+            .sort({ 'created_date': date_sort })
+            .skip(page > 0 ? ((page - 1) * pagesize) : 0)
+            .limit(pagesize);
 
         res.send(list);
     } catch (err) {
