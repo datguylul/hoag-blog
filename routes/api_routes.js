@@ -52,12 +52,13 @@ Router.post('/blog', async (req, res) => {
             content: req.body.content,
             display_img: req.body.display_img,
             tags_id: req.body.tags,
-            slug: slug
+            slug: slug,
+            author_id: req.body.author_id
         });
 
         const result = await blog.save();
 
-        res.send("result");
+        res.send(result);
     } catch (err) {
         console.log(err);
     }

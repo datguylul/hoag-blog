@@ -61,10 +61,7 @@ Router.get('/blogs/:page?', async (req, res) => {
         const list = await Blog.find()
             .sort({ 'created_date': -1 })
             .skip(page > 0 ? ((page - 1) * pagesize) : 0)
-            .limit(pagesize)
-            .each(() => {
-
-            });
+            .limit(pagesize);
 
         const data = {
             page: page,

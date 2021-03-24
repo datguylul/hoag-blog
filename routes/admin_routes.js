@@ -67,7 +67,8 @@ Router.get('/tag', jwt_auth, async (req, res) => {
 Router.get('/blog/create', jwt_auth, async (req, res) => {
     try {
         const data = {
-            tags: await Tag.find()
+            tags: await Tag.find(),
+            author_id: req.session.user_id
         }
         res.render('../views/pages/admin/createblog', data);
     } catch (err) {

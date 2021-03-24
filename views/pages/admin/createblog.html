@@ -73,7 +73,8 @@
                 alt_title: $('#alt-title-input').val(),
                 content: CKEDITOR.instances['content-editor'].getData(),
                 display_img: $('#img-path-input').val(),
-                tags: $('#multi-select').val()
+                tags: $('#multi-select').val(),
+                author_id: '<%= author_id %>'
             }, function (data) {
                 console.log(data);
                 alert("success");
