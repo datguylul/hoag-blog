@@ -53,7 +53,7 @@ Router.post('/blog', async (req, res) => {
             display_img: req.body.display_img,
             tags_id: req.body.tags,
             slug: slug,
-            author_id: req.body.author_id
+            author_id: req.session.userid
         });
 
         const result = await blog.save();

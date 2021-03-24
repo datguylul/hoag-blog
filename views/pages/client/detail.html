@@ -20,12 +20,14 @@
     <div class="container paddding">
         <div class="row mx-0">
             <div class="col-md-8 animate-box" data-animate-effect="fadeInLeft">
+                <hr>
                 <% tags.map(item=>{ %>
                     <span class="badge badge-pill badge-primary">
                         <a href="/tag/<%= item.slug %>" style="color: inherit;">
                             <%= item.name %>
                         </a></span>
                     <% }); %>
+                        <hr>
                         <%- blog.content %>
             </div>
             <%- include('../../partial/client/tags.html'); %>
