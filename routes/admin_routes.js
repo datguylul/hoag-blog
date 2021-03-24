@@ -109,4 +109,15 @@ Router.get('/tag/edit/:id', jwt_auth, async (req, res) => {
     }
 });
 
+Router.get('/profile/', jwt_auth, async (req, res) => {
+    try {
+        const id = req.session.user_id;
+        const user = await User.findById(id);
+
+        res.render('../views/pages/admin/userprofile', user);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
 module.exports = Router;

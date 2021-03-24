@@ -216,7 +216,10 @@ Router.post('/user/login', async (req, res) => {
         //     id: user._id,
         //     token: token
         // }
-        res.status(200).header('auth-token', token).send(token);
+        res.status(200).header('auth-token', token).send({
+            user_id: user._id,
+            token: token
+        });
         //res.status(200).send({ message: 'logged in' });
     } catch (err) {
         console.log(err);
@@ -259,17 +262,6 @@ Router.post('/user/signup', async (req, res) => {
         res.status(400).send({ message: 'fail', error: err });
     }
 });
-
-// Router.get('/user/profile', jwt_verify.userauth, async (req, res) => {
-//     try {
-//         if (req.session.User) {
-//             return res.status(200).json({ status: 'success', session: req.session.User })
-//         } else res.status(400).send({ message: 'cant get user data' });
-//     } catch (err) {
-//         console.log(err);
-//         res.status(400).send({ message: 'fail', error: err });
-//     }
-// });
 
 // Router.post('/user/logout', jwt_verify.userauth, async (req, res) => {
 //     try {
