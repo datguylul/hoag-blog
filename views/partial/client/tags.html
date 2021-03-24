@@ -16,11 +16,15 @@
     <% locals.popular.forEach(item=> { %>
         <div class="row pb-3">
             <div class="col-5 align-self-center">
-                <img src="<%= item.display_img %>" alt="img" class="fh5co_most_trading" />
+                <a href="/blog/<%= item.slug %>">
+                    <img src="<%= item.display_img %>" alt="img" class="fh5co_most_trading" />
+                </a>
             </div>
             <div class="col-7 paddding">
                 <div class="most_fh5co_treding_font">
-                    <%= item.title %>
+                    <a href="/blog/<%= item.slug %>" style="color: inherit;">
+                        <%= item.title %>
+                    </a>
                 </div>
                 <div class="most_fh5co_treding_font_123">
                     <%= item.created_date.toLocaleDateString() %>
