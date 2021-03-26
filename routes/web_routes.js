@@ -187,5 +187,13 @@ Router.get('/logout', async (req, res) => {
     }
 });
 
+Router.get('/todo', async (req, res) => {
+    try {
+
+        res.render('../views/pages/client/todo');
+    } catch (err) {
+        console.log(err);
+    }
+});
 
 module.exports = Router;
