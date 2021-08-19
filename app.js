@@ -35,7 +35,7 @@ app.use('/api', api_routes);
 app.get('*', async (req, res) => res.render('../views/pages/client/notfound'));
 
 mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
-    if (err) console.log("connect fail");
+    if (err) console.log("db connect fail");
     else console.log("db connected");
 });
 

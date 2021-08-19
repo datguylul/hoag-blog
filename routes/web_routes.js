@@ -6,9 +6,6 @@ const User = require('../models/user');
 const Blog = require('../models/blog');
 const Tag = require('../models/tag');
 const HeaderMenu = require('../models/header_menu');
-const header_menu = require('../models/header_menu');
-
-const api = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false'
 
 Router.use(async (req, res, next) => {
     const menu = await HeaderMenu.find();
@@ -182,15 +179,6 @@ Router.get('/logout', async (req, res) => {
         }
 
         res.render('../views/pages/client/login', data);
-    } catch (err) {
-        console.log(err);
-    }
-});
-
-Router.get('/todo', async (req, res) => {
-    try {
-
-        res.render('../views/pages/client/todo');
     } catch (err) {
         console.log(err);
     }
