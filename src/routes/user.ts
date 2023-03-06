@@ -7,8 +7,9 @@ import jwt from "jsonwebtoken";
 
 const Router = express.Router();
 import { User } from "@schema";
+import { StatusCode } from "@constant";
 
-Router.post("/user/login", async (req, res) => {
+Router.post("/login", async (req, res) => {
   const login_schema = joi.object({
     username: joi.string().required(),
     password: joi.string().min(6).required(),
@@ -16,37 +17,39 @@ Router.post("/user/login", async (req, res) => {
   try {
     const { error } = login_schema.validate(req.body);
     if (error)
-      return res.status(400).send({ message: error.details[0].message });
+      return res
+        .status(StatusCode.BAD_REQUEST)
+        .send({ message: error.details[0].message });
 
     const user = await User.findOne({ username: req.body.username });
     if (!user)
       return res
-        .status(400)
+        .status(StatusCode.BAD_REQUEST)
         .send({ message: "username or password not correct" });
 
     const validpwd = await bcrypt.compare(req.body.password, user.password);
     if (!validpwd)
       return res
-        .status(400)
+        .status(StatusCode.BAD_REQUEST)
         .send({ message: "username or password not correct" });
 
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_TOKEN);
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_TOKEN ?? "");
     // req.session.User = {
     //     id: user._id,
     //     token: token
     // }
-    res.status(200).header("auth-token", token).send({
+    res.status(StatusCode.OK).header("auth-token", token).send({
       user_id: user._id,
       token: token,
     });
-    //res.status(200).send({ message: 'logged in' });
+    //res.status(StatusCode.OK).send({ message: 'logged in' });
   } catch (err) {
     console.log(err);
-    res.status(404).send({ message: "error" });
+    res.status(StatusCode.NOT_FOUND).send({ message: "error" });
   }
 });
 
-Router.post("/user/signup", async (req, res) => {
+Router.post("/signup", async (req, res) => {
   const signup_schema = joi.object({
     name: joi.string().required(),
     username: joi.string().required(),
@@ -56,11 +59,15 @@ Router.post("/user/signup", async (req, res) => {
   try {
     const { error } = signup_schema.validate(req.body);
     if (error)
-      return res.status(400).send({ message: error.details[0].message });
+      return res
+        .status(StatusCode.BAD_REQUEST)
+        .send({ message: error.details[0].message });
 
     const user_check = await User.findOne({ username: req.body.username });
     if (user_check)
-      return res.status(400).send({ message: "username already taken" });
+      return res
+        .status(StatusCode.BAD_REQUEST)
+        .send({ message: "username already taken" });
 
     const salt = await bcrypt.genSalt(10);
     const hashpwd = await bcrypt.hash(req.body.password, salt);
@@ -76,23 +83,24 @@ Router.post("/user/signup", async (req, res) => {
 
     const result = await user.save();
     console.log({ user: user._id });
-    if (!result) return res.status(400).send({ message: "fail" });
-    res.status(200).send({ message: "success" });
+    if (!result)
+      return res.status(StatusCode.BAD_REQUEST).send({ message: "fail" });
+    res.status(StatusCode.OK).send({ message: "success" });
   } catch (err) {
     console.log(err);
-    res.status(400).send({ message: "fail", error: err });
+    res.status(StatusCode.BAD_REQUEST).send({ message: "fail", error: err });
   }
 });
 
-// Router.post('/user/logout', jwt_verify.userauth, async (req, res) => {
+// Router.post('/logout', jwt_verify.userauth, async (req, res) => {
 //     try {
 //         req.session.destroy(function (err) {
-//             return res.status(200).json({ status: 'success', session: 'cannot access session here' })
+//             return res.status(StatusCode.OK).json({ status: 'success', session: 'cannot access session here' })
 //         });
 
 //     } catch (err) {
 //         console.log(err);
-//         res.status(400).send({ message: 'fail', error: err });
+//         res.status(StatusCode.BAD_REQUEST).send({ message: 'fail', error: err });
 //     }
 // });
 
