@@ -1,8 +1,8 @@
 import { SchemaName } from "@constant";
-import { User } from "@models";
+import { UserInfo } from "@models";
 import mongoose from "mongoose";
 
-const User = mongoose.model<User>(
+const User = mongoose.model<UserInfo>(
   SchemaName.USER,
   new mongoose.Schema({
     name: {

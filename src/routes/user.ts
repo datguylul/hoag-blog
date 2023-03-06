@@ -1,13 +1,14 @@
-import { Blog } from "@schema";
-import express, { Request } from "express";
-import slugify from "slugify";
-import joi from "@hapi/joi";
-import bcrypt from "bcryptjs";
+import express from "express";
+import joi from "joi";
 import jwt from "jsonwebtoken";
+import { isEmpty } from "lodash";
+import { User } from "@schema";
+import { Message, StatusCode } from "@constant";
+import { MD5String } from "@utils";
+import { UserInfo } from "@models";
+import { auth } from "./jwt/authorize";
 
 const Router = express.Router();
-import { User } from "@schema";
-import { StatusCode } from "@constant";
 
 Router.post("/login", async (req, res) => {
   const login_schema = joi.object({
@@ -20,41 +21,37 @@ Router.post("/login", async (req, res) => {
       return res
         .status(StatusCode.BAD_REQUEST)
         .send({ message: error.details[0].message });
+    const hashPwd = MD5String(req.body.password);
 
-    const user = await User.findOne({ username: req.body.username });
-    if (!user)
+    const user = await User.findOne(
+      { username: req.body.username, password: hashPwd },
+      { password: 0 }
+    );
+
+    if (isEmpty(user))
       return res
         .status(StatusCode.BAD_REQUEST)
-        .send({ message: "username or password not correct" });
-
-    const validpwd = await bcrypt.compare(req.body.password, user.password);
-    if (!validpwd)
-      return res
-        .status(StatusCode.BAD_REQUEST)
-        .send({ message: "username or password not correct" });
+        .send({ message: Message.login.namePassNotCorrect });
 
     const token = jwt.sign({ _id: user._id }, process.env.JWT_TOKEN ?? "");
-    // req.session.User = {
-    //     id: user._id,
-    //     token: token
-    // }
     res.status(StatusCode.OK).header("auth-token", token).send({
-      user_id: user._id,
+      user: user,
       token: token,
     });
-    //res.status(StatusCode.OK).send({ message: 'logged in' });
   } catch (err) {
-    console.log(err);
-    res.status(StatusCode.NOT_FOUND).send({ message: "error" });
+    console.log("login", err);
+    res
+      .status(StatusCode.SERVER_ERROR)
+      .send({ message: Message.internalServerError });
   }
 });
 
-Router.post("/signup", async (req, res) => {
+Router.post("/sign-up", async (req, res) => {
   const signup_schema = joi.object({
     name: joi.string().required(),
     username: joi.string().required(),
     password: joi.string().min(6).required(),
-    email: joi.string().email(),
+    email: joi.string().email().required(),
   });
   try {
     const { error } = signup_schema.validate(req.body);
@@ -63,45 +60,72 @@ Router.post("/signup", async (req, res) => {
         .status(StatusCode.BAD_REQUEST)
         .send({ message: error.details[0].message });
 
-    const user_check = await User.findOne({ username: req.body.username });
+    const user_check = await User.findOne(
+      { username: req.body.username },
+      { password: 0 }
+    );
     if (user_check)
       return res
         .status(StatusCode.BAD_REQUEST)
-        .send({ message: "username already taken" });
+        .send({ message: Message.signUp.userNameTaken });
 
-    const salt = await bcrypt.genSalt(10);
-    const hashpwd = await bcrypt.hash(req.body.password, salt);
-
-    const user = new User({
+    const user: UserInfo = {
       name: req.body.name,
       username: req.body.username,
-      password: hashpwd,
+      password: MD5String(req.body.password),
       email: req.body.email || "",
       phone: req.body.phone || "",
       address: req.body.address || "",
-    });
+      created_date: Date.now(),
+    };
 
-    const result = await user.save();
-    console.log({ user: user._id });
+    const result = await new User(user).save();
     if (!result)
       return res.status(StatusCode.BAD_REQUEST).send({ message: "fail" });
-    res.status(StatusCode.OK).send({ message: "success" });
+
+    delete user.password;
+    res.status(StatusCode.OK).send({ user: user, message: "success" });
   } catch (err) {
-    console.log(err);
-    res.status(StatusCode.BAD_REQUEST).send({ message: "fail", error: err });
+    console.log("sign-up", err);
+    res
+      .status(StatusCode.SERVER_ERROR)
+      .send({ message: Message.internalServerError, error: err });
   }
 });
 
-// Router.post('/logout', jwt_verify.userauth, async (req, res) => {
-//     try {
-//         req.session.destroy(function (err) {
-//             return res.status(StatusCode.OK).json({ status: 'success', session: 'cannot access session here' })
-//         });
+Router.get("/detail", auth, async (req, res) => {
+  try {
+    const user = await User.findOne(
+      { username: req.body.username },
+      { password: 0 }
+    );
+    if (isEmpty(user))
+      return res
+        .status(StatusCode.BAD_REQUEST)
+        .send({ message: Message.user.userNotFound });
 
-//     } catch (err) {
-//         console.log(err);
-//         res.status(StatusCode.BAD_REQUEST).send({ message: 'fail', error: err });
-//     }
+    res.status(StatusCode.OK).send({ user: user, message: "success" });
+  } catch (err) {
+    console.log("detail-error", err);
+    res
+      .status(StatusCode.SERVER_ERROR)
+      .send({ message: Message.internalServerError, error: err });
+  }
+});
+
+// Router.post("/logout", jwt_verify.userauth, async (req, res) => {
+//   try {
+//     req.session.destroy(function (err) {
+//       return res
+//         .status(StatusCode.OK)
+//         .json({ status: "success", session: "cannot access session here" });
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     res
+//       .status(StatusCode.SERVER_ERROR)
+//       .send({ message: Message.internalServerError, error: err });
+//   }
 // });
 
 export default Router;

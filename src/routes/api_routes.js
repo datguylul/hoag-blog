@@ -1,5 +1,5 @@
 const Router = require("express").Router();
-const joi = require("@hapi/joi");
+const joi = require("joi");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const slugify = require("slugify");

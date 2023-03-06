@@ -1,5 +1,5 @@
 import { Blog } from "@schema";
-import express, { Request } from "express";
+import express from "express";
 import slugify from "slugify";
 
 const Router = express.Router();
