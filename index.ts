@@ -24,7 +24,7 @@ app.use(body_parser.urlencoded({ extended: true }));
 
 app.use("/api", api);
 
-app.get("/test", (req, res) => {
+app.get("/", (req, res) => {
   res.json({
     hello: "world",
   });

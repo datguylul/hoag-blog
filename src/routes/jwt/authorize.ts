@@ -1,6 +1,9 @@
 import { Message, StatusCode } from "@constant";
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
+export interface AuthPayload extends Request {
+  userId: { _id: string } | string | JwtPayload;
+}
 
 export const auth = (req: Request, res: Response, next: NextFunction) => {
   const token = req.header("Authorization");
@@ -11,9 +14,7 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const verified = jwt.verify(token, process.env.JWT_TOKEN ?? "");
-    // req.user = verified;
-
-    console.log("verified", verified);
+    (req as AuthPayload).userId = verified;
 
     next();
   } catch (err) {

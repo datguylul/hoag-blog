@@ -1,16 +1,23 @@
 import { SchemaName } from "@constant";
+import { IncomeYearly } from "@models";
 import mongoose from "mongoose";
 
-const Tag = mongoose.model(
-  SchemaName.TAG,
+const IncomeYearlySchema = mongoose.model<IncomeYearly>(
+  SchemaName.INCOME_YEARLY,
   new mongoose.Schema({
-    name: {
-      type: String,
+    date: {
+      type: Date,
       required: true,
     },
-    slug: {
+    income: {
+      type: Number,
+      required: true,
+    },
+    from: {
       type: String,
-      default: "",
+    },
+    note: {
+      type: String,
     },
     created_date: {
       type: Date,
@@ -23,4 +30,4 @@ const Tag = mongoose.model(
   })
 );
 
-export { Tag };
+export { IncomeYearlySchema };

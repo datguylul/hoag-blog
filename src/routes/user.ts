@@ -6,7 +6,7 @@ import { User } from "@schema";
 import { Message, StatusCode } from "@constant";
 import { MD5String } from "@utils";
 import { UserInfo } from "@models";
-import { auth } from "./jwt/authorize";
+import { auth, AuthPayload } from "./jwt/authorize";
 
 const Router = express.Router();
 
@@ -93,12 +93,35 @@ Router.post("/sign-up", async (req, res) => {
   }
 });
 
+Router.get("/list", auth, async (req, res) => {
+  try {
+    const pageIndex = parseInt(req.body.pageIndex as string) ?? 1;
+    const pageSize = parseInt(req.query.pageSize as string) ?? 10;
+    const date_sort = req.query.date_sort || -1;
+
+    const list = await User.find()
+      .sort({ created_date: date_sort })
+      .skip(pageIndex > 0 ? (pageIndex - 1) * pageSize : 0)
+      .limit(pageSize);
+
+    res.status(StatusCode.OK).send({ user: list, message: "success" });
+  } catch (err) {
+    console.log("detail-error", err);
+    res
+      .status(StatusCode.SERVER_ERROR)
+      .send({ message: Message.internalServerError, error: err });
+  }
+});
+
 Router.get("/detail", auth, async (req, res) => {
   try {
     const user = await User.findOne(
       { username: req.body.username },
       { password: 0 }
     );
+
+    console.log("req", (req as AuthPayload).userId);
+
     if (isEmpty(user))
       return res
         .status(StatusCode.BAD_REQUEST)
