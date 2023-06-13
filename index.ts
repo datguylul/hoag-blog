@@ -8,6 +8,7 @@ import cors from "cors";
 
 import { api } from "@routes";
 import { mongooseConnect } from "@mongoose";
+import { notFound, swaggerDocs } from "@utils";
 
 app.use(
   session({
@@ -24,22 +25,14 @@ app.use(body_parser.urlencoded({ extended: true }));
 
 app.use("/api", api);
 
-app.get("/", (req, res) => {
-  res.json({
-    hello: "world",
-  });
-});
-
-app.get("*", async (_, res) => {
-  res.status(404);
-  res.send({
-    error: "Not Found",
-  });
-});
-
-mongooseConnect();
-
 const port = process.env.PORT || 3000;
+
 app.listen(port, () => {
+  mongooseConnect();
+
+  swaggerDocs(app, port as number);
+
+  notFound(app);
+
   console.log(`running at: ${port}`);
 });

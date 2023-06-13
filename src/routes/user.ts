@@ -10,6 +10,34 @@ import { auth, AuthPayload } from "./jwt/authorize";
 
 const Router = express.Router();
 
+/**
+ * @openapi
+ * '/api/v1/user/login':
+ *  post:
+ *     tags:
+ *     - User
+ *     summary: User login
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *              type: object
+ *              properties:
+ *                username:
+ *                  type: string
+ *                password:
+ *                  type: string
+ *                phone:
+ *              required:
+ *               - username
+ *               - password
+ *     responses:
+ *      200:
+ *        description: Success
+ *      400:
+ *        description: Bad request
+ */
 Router.post("/login", async (req, res) => {
   const login_schema = joi.object({
     username: joi.string().required(),
@@ -46,12 +74,51 @@ Router.post("/login", async (req, res) => {
   }
 });
 
+/**
+ * @openapi
+ * '/api/v1/user/sign-up':
+ *  post:
+ *     tags:
+ *     - User
+ *     summary: User sign up
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *              type: object
+ *              properties:
+ *                name:
+ *                  type: string
+ *                username:
+ *                  type: string
+ *                password:
+ *                  type: string
+ *                email:
+ *                  type: string
+ *                phone:
+ *                  type: string
+ *              required:
+ *               - name
+ *               - username
+ *               - password
+ *     responses:
+ *      200:
+ *        description: Success
+ *      400:
+ *        description: Bad request
+ */
 Router.post("/sign-up", async (req, res) => {
   const signup_schema = joi.object({
     name: joi.string().required(),
     username: joi.string().required(),
     password: joi.string().min(6).required(),
     email: joi.string().email().required(),
+    phone: joi
+      .string()
+      .length(10)
+      .pattern(/^[0-9]+$/)
+      .required(),
   });
   try {
     const { error } = signup_schema.validate(req.body);
